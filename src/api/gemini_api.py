@@ -1,6 +1,7 @@
-#src/apo/gemini_api.py
 import requests
 import json
+import os
+from dotenv import load_dotenv
 
 class GeminiAPI:
     def __init__(self, api_key):
@@ -46,18 +47,24 @@ class GeminiAPI:
             print(f"Error during API call: {e}")
             return None
 
-# Example usage:
-if __name__ == "__main__":
-    API_KEY = "AIzaSyBApv0M03F8yvcqESAzRlByjjCdHmsD-zo" 
-    gemini = GeminiAPI(api_key=API_KEY)
+# Load environment variables from the .env file
+load_dotenv()
 
-    # Test generating content
-    model = "gemini-1.5-flash-latest"
-    prompt = "Explain how AI works"
-    response = gemini.generate_content(model, prompt)
-    
-    if response:
-        print("Generated Response:")
-        print(json.dumps(response, indent=2))
-    else:
-        print("Failed to generate content.")
+# Get the API key from the environment variable
+API_KEY = os.getenv("GEMINI_API_KEY")
+
+if API_KEY is None:
+    raise ValueError("API key not found. Please set the GEMINI_API_KEY in the .env file.")
+
+gemini = GeminiAPI(api_key=API_KEY)
+
+# Test generating content
+model = "gemini-1.5-flash-latest"
+prompt = "Explain how AI works"
+response = gemini.generate_content(model, prompt)
+
+if response:
+    print("Generated Response:")
+    print(json.dumps(response, indent=2))
+else:
+    print("Failed to generate content.")
